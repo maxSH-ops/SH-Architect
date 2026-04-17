@@ -1,6 +1,11 @@
+// CorePlus Architect v4
+// - v1: Initial build from Excel (4 styles, strategy toggles, donut chart, password gate)
+// - v2: Sandhill brand guidelines applied (navy/gold, Lato, logo)
+// - v3: Equity Only style, LCY/CEA/LCY equity strategy, PDF export, updated weight tables, CEA min $50K
+// - v4: Residual-fill logic for 72 previously broken toggle combos, expanded model naming (90 non-EQ + 30 EQ = 300 models), under-allocation warning banner
 import { useState, useMemo, useCallback } from "react";
 
-const LOGO_SRC = "data:image/png;base64,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";
+const LOGO_SRC = "data:image/jpeg;base64,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";
 
 const CEA_MIN_VALUE=50000, BOND_MIN_VALUE=80000;
 const STYLES=["Conservative","Moderate","Aggressive","Equity Only"];
@@ -10,26 +15,45 @@ const C={navy:"#004465",navyLight:"#005a82",navyDark:"#003450",gold:"#d0ac2b",go
 const fmt=n=>n.toLocaleString("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0});
 const fmtPct=n=>(n*100).toFixed(1)+"%";
 
-// ═══ WEIGHT ENGINE ══════════════════════════════════════════════════════════
-function getFullPropWeight(style,prop,pas,intl,out){
-  if(!prop)return 0;
+// ═══ WEIGHT ENGINE (with residual-fill for gaps) ══════════════════════════
+function _propTbl(style,pas,intl,out){
   const W={Conservative:[10,5,10,7.5,15],Moderate:[25,12.5,25,15,30],Aggressive:[35,17.5,35,20,40],"Equity Only":[45,22.5,45,25,50]};
-  const w=W[style];if(!w)return 0;
-  if(pas&&intl&&!out)return w[0];if(pas&&intl&&out)return w[1];if(!pas&&intl&&out)return w[2];if(pas&&!intl&&out)return w[3];if(pas&&!intl&&!out)return w[4];return 0;
+  const w=W[style];if(!w)return null;
+  if(pas&&intl&&!out)return w[0];if(pas&&intl&&out)return w[1];if(!pas&&intl&&out)return w[2];if(pas&&!intl&&out)return w[3];if(pas&&!intl&&!out)return w[4];return null;
 }
-function getPassiveWt(style,anyP,pas,intl,out){
-  if(!pas)return 0;
+function _pasTbl(style,anyP,intl,out){
   const W={Conservative:[10,10,15,15,20,10,15],Moderate:[25,25,30,30,50,25,30],Aggressive:[35,35,40,40,70,35,40],"Equity Only":[45,44,49,50,88,45,50]};
-  const w=W[style];if(!w)return 0;
-  if(anyP&&intl&&out)return w[0];if(!anyP&&intl&&out)return w[1];if(!anyP&&!intl&&out)return w[2];if(anyP&&!intl&&out)return w[3];if(!anyP&&intl&&!out)return w[4];if(anyP&&intl&&!out)return w[5];if(anyP&&!intl&&!out)return w[6];return 0;
+  const w=W[style];if(!w)return null;
+  if(anyP&&intl&&out)return w[0];if(!anyP&&intl&&out)return w[1];if(!anyP&&!intl&&out)return w[2];if(anyP&&!intl&&out)return w[3];if(!anyP&&intl&&!out)return w[4];if(anyP&&intl&&!out)return w[5];if(anyP&&!intl&&!out)return w[6];return null;
 }
-function getOutWt(style,anyP,pas,intl,out){
-  if(!out)return 0;
+function _outTbl(style,anyP,pas,intl){
   const W={Conservative:[10,5,10,7.5,15],Moderate:[25,12.5,25,15,30],Aggressive:[35,17.5,35,20,40],"Equity Only":[44,22.5,45,25,49]};
-  const w=W[style];if(!w)return 0;
-  if(!anyP&&pas&&intl)return w[0];if(anyP&&pas&&intl)return w[1];if(anyP&&!pas&&intl)return w[2];if(anyP&&pas&&!intl)return w[3];if(!anyP&&pas&&!intl)return w[4];return 0;
+  const w=W[style];if(!w)return null;
+  if(!anyP&&pas&&intl)return w[0];if(anyP&&pas&&intl)return w[1];if(anyP&&!pas&&intl)return w[2];if(anyP&&pas&&!intl)return w[3];if(!anyP&&pas&&!intl)return w[4];return null;
 }
 function getFixedWt(s){return s==="Conservative"?68:s==="Moderate"?38:s==="Aggressive"?18:0;}
+
+function computeWeights(style,hasCEA,hasLCY,outOn,pasOn,intlOn){
+  const isEQ=style==="Equity Only",anyP=hasCEA||hasLCY,both=hasCEA&&hasLCY;
+  const fixPct=isEQ?0:getFixedWt(style),cashPct=isEQ?(anyP?0:2):2,intlPct=intlOn?10:0;
+  const fpRaw=anyP?_propTbl(style,pasOn,intlOn,outOn):null;
+  const pasRaw=pasOn?_pasTbl(style,anyP,intlOn,outOn):null;
+  const outRaw=outOn?_outTbl(style,anyP,pasOn,intlOn):null;
+  const fp=fpRaw!==null?fpRaw:0,ps=pasRaw!==null?pasRaw:0,ot=outRaw!==null?outRaw:0;
+  let ceaPct=hasCEA?(both?fp/2:fp):0,lcyPct=hasLCY?(both?fp/2:fp):0;
+  let pasPct=ps,outPct=ot;
+  const raw=ceaPct+lcyPct+pasPct+outPct+intlPct+fixPct+cashPct;
+  if(Math.abs(raw-100)<0.1) return {ceaPct,lcyPct,outPct,pasPct,intlPct,fixPct,cashPct};
+  // Residual fill
+  const residual=100-fixPct-cashPct-intlPct;
+  if(anyP){
+    if(outOn&&outRaw===null){outPct=residual/2;const pr=residual/2;if(both){ceaPct=pr/2;lcyPct=pr/2;}else if(hasCEA){ceaPct=pr;lcyPct=0;}else{ceaPct=0;lcyPct=pr;}}
+    else{const pr=residual-outPct;if(both){ceaPct=pr/2;lcyPct=pr/2;}else if(hasCEA){ceaPct=pr;lcyPct=0;}else{ceaPct=0;lcyPct=pr;}}
+  } else if(outOn){
+    if(pasOn&&pasRaw===null){pasPct=residual/2;outPct=residual/2;}else{outPct=residual-pasPct;}
+  } else if(pasOn){pasPct=residual;}
+  return {ceaPct,lcyPct,outPct,pasPct,intlPct,fixPct,cashPct};
+}
 function getPasSplits(style,pct){
   if(!pct)return[];
   if(style==="Conservative")return[{t:"IVV",l:"Passive Large Blend",c:"Large Cap Core",w:pct*0.5},{t:"IUSV",l:"Passive Large Value",c:"Large Cap Growth",w:pct*0.5}];
@@ -42,17 +66,35 @@ const MIN_ACCT={Conservative:333333,Moderate:166667,Aggressive:142857,"Equity On
 
 function isCEABad(style,pct,mv){const m=CEA_MINS[style];if(!m)return false;for(const[p,v]of Object.entries(m))if(Math.abs(pct-Number(p))<0.01&&mv<v)return true;return false;}
 
-// ═══ MODEL NAMING ═══════════════════════════════════════════════════════════
-const MT=[];// non-Equity Only: 54 models
+// ═══ MODEL NAMING (90 non-EQ models, 30 EQ models) ═══════════════════════
+const MT=[];// non-Equity Only: 90 models (54 original + 36 new)
+// CEA-only 1-24
 [[1,1,1,1],[0,1,1,1],[0,1,1,0],[0,0,1,1],[1,0,1,1],[1,0,1,0],[1,1,1,0],[1,1,0,1]].forEach((c,g)=>[0,1,2].forEach(f=>MT.push({a:!!c[0],o:!!c[1],p:!!c[2],i:!!c[3],f,y:false,n:g*3+f+1})));
+// LCY-only 25-39
 [[1,1,1],[0,1,1],[0,1,0],[1,1,0],[1,0,1]].forEach((c,g)=>[0,1,2].forEach(f=>MT.push({a:false,o:!!c[0],p:!!c[1],i:!!c[2],f,y:true,n:24+g*3+f+1})));
+// CEA+LCY 40-54
 [[1,1,1],[0,1,1],[0,1,0],[1,1,0],[1,0,1]].forEach((c,g)=>[0,1,2].forEach(f=>MT.push({a:true,o:!!c[0],p:!!c[1],i:!!c[2],f,y:true,n:39+g*3+f+1})));
+// NEW residual-fill models 55-90
+// CEA-only no-passive: [out,intl]
+[[1,0],[0,1],[0,0]].forEach((c,g)=>[0,1,2].forEach(f=>MT.push({a:true,o:!!c[0],p:false,i:!!c[1],f,y:false,n:54+g*3+f+1})));
+// LCY-only no-passive: [out,intl]
+[[1,0],[0,1],[0,0]].forEach((c,g)=>[0,1,2].forEach(f=>MT.push({a:false,o:!!c[0],p:false,i:!!c[1],f,y:true,n:63+g*3+f+1})));
+// CEA+LCY no-passive: [out,intl]
+[[1,0],[0,1],[0,0]].forEach((c,g)=>[0,1,2].forEach(f=>MT.push({a:true,o:!!c[0],p:false,i:!!c[1],f,y:true,n:72+g*3+f+1})));
+// No-prop residual: out+no-pas+intl, out+no-pas+no-intl, pas-only+no-intl
+[0,1,2].forEach(f=>{MT.push({a:false,o:true,p:false,i:true,f,y:false,n:81+f});MT.push({a:false,o:true,p:false,i:false,f,y:false,n:84+f});MT.push({a:false,o:false,p:true,i:false,f,y:false,n:87+f});});
 
 const EM=[
+  // Original 18
   {a:1,o:1,p:1,i:1,y:0,n:1},{a:0,o:1,p:1,i:1,y:0,n:2},{a:0,o:1,p:1,i:0,y:0,n:3},{a:0,o:0,p:1,i:1,y:0,n:4},
   {a:1,o:0,p:1,i:1,y:0,n:5},{a:1,o:0,p:1,i:0,y:0,n:6},{a:1,o:1,p:1,i:0,y:0,n:7},{a:1,o:1,p:0,i:1,y:0,n:8},
   {a:0,o:1,p:1,i:1,y:1,n:9},{a:0,o:0,p:1,i:1,y:1,n:10},{a:0,o:0,p:1,i:0,y:1,n:11},{a:0,o:1,p:1,i:0,y:1,n:12},{a:0,o:1,p:0,i:1,y:1,n:13},
   {a:1,o:1,p:1,i:1,y:1,n:14},{a:1,o:0,p:1,i:1,y:1,n:15},{a:1,o:0,p:1,i:0,y:1,n:16},{a:1,o:1,p:1,i:0,y:1,n:17},{a:1,o:1,p:0,i:1,y:1,n:18},
+  // NEW 12 residual-fill models (19-30)
+  {a:1,o:1,p:0,i:0,y:0,n:19},{a:0,o:1,p:0,i:0,y:1,n:20},{a:1,o:1,p:0,i:0,y:1,n:21},
+  {a:1,o:0,p:0,i:1,y:0,n:22},{a:0,o:0,p:0,i:1,y:1,n:23},{a:1,o:0,p:0,i:1,y:1,n:24},
+  {a:1,o:0,p:0,i:0,y:0,n:25},{a:0,o:0,p:0,i:0,y:1,n:26},{a:1,o:0,p:0,i:0,y:1,n:27},
+  {a:0,o:1,p:0,i:1,y:0,n:28},{a:0,o:1,p:0,i:0,y:0,n:29},{a:0,o:0,p:1,i:0,y:0,n:30},
 ];
 
 function modelName(style,cea,lcy,out,pas,intl,fi){
@@ -75,11 +117,9 @@ export default function App(){
   const isEQ=style==="Equity Only";
 
   const model=useMemo(()=>{
-    const hasCEA=propActive&&(eqStrat==="CEA"||eqStrat==="CEA/LCY"),hasLCY=propActive&&(eqStrat==="LCY"||eqStrat==="CEA/LCY"),anyP=hasCEA||hasLCY,both=eqStrat==="CEA/LCY"&&propActive;
-    const fp=getFullPropWeight(style,propActive,passive,intl,outsourced);
-    const ceaPct=hasCEA?(both?fp/2:fp):0,lcyPct=hasLCY?(both?fp/2:fp):0;
-    const pasPct=getPassiveWt(style,anyP,passive,intl,outsourced),outPct=getOutWt(style,anyP,passive,intl,outsourced);
-    const intlPct=intl?10:0,fixPct=isEQ?0:getFixedWt(style),cashPct=isEQ?(anyP?0:2):2;
+    const hasCEA=propActive&&(eqStrat==="CEA"||eqStrat==="CEA/LCY"),hasLCY=propActive&&(eqStrat==="LCY"||eqStrat==="CEA/LCY"),anyP=hasCEA||hasLCY;
+    const wts=computeWeights(style,hasCEA,hasLCY,outsourced,passive,intl);
+    const {ceaPct,lcyPct,outPct,pasPct,intlPct,fixPct,cashPct}=wts;
     const checkPct=ceaPct||lcyPct;
     const ceaBad=propActive&&isCEABad(style,checkPct,totalMV);
     const ss={};
@@ -138,30 +178,8 @@ export default function App(){
         <div style={{display:"flex",alignItems:"center",gap:20}}><img src={LOGO_SRC} alt="Sandhill" style={{height:40}}/><div style={{height:30,width:1,background:C.border}}/><h1 style={{margin:0,fontFamily:"'Libre Baskerville',serif",fontSize:19,color:C.navy,fontWeight:400}}>CorePlus Architect</h1></div>
         <div style={{display:"flex",alignItems:"center",gap:12}}>
           {model.mn!=="—"&&<div style={{background:C.navy,borderRadius:6,padding:"8px 18px",display:"flex",alignItems:"center",gap:10}}><span style={{color:C.goldLight,fontSize:10,textTransform:"uppercase",letterSpacing:"0.1em",fontWeight:700}}>Model</span><span style={{color:C.white,fontSize:14,fontWeight:700}}>{model.mn}</span></div>}
-          <button
-            onClick={handlePDF}
-            style={{
-              background: C.gold,
-              color: C.white,
-              border: "none",
-              borderRadius: 6,
-              padding: "10px 16px",
-              fontSize: 12,
-              fontWeight: 700,
-              cursor: "pointer",
-              fontFamily: "'Lato',sans-serif",
-              display: "flex",
-              alignItems: "center",
-              gap: 6
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "#b8951e")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = C.gold)}
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
-            </svg>
-            Export PDF
-          </button>
+          <button onClick={handlePDF} style={{background:C.gold,color:C.white,border:"none",borderRadius:6,padding:"10px 16px",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"'Lato',sans-serif",display:"flex",alignItems:"center",gap:6}} onMouseEnter={e=>e.currentTarget.style.background="#b8951e"} onMouseLeave={e=>e.currentTarget.style.background=C.gold}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Export PDF</button>
         </div>
       </header>
       <div style={{maxWidth:1240,margin:"0 auto",padding:"28px 24px"}}>
@@ -189,6 +207,10 @@ export default function App(){
                 <Stat label="Total Value" value={fmt(model.td)}/><Stat label="Positions" value={model.rows.filter(r=>r.w>0).length}/><Stat label={isEQ?"Equity":"Equity / FI"} value={isEQ?`${(model.tw*100).toFixed(0)}%`:`${(100-getFixedWt(style)-2)} / ${getFixedWt(style)}`}/>
               </div>
             </div>
+            {model.tw<0.999&&(<div style={{background:"#fef2f2",border:`1.5px solid ${C.danger}`,borderRadius:8,padding:"14px 20px",display:"flex",alignItems:"center",gap:12}}>
+              <div style={{width:36,height:36,borderRadius:18,background:C.danger,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><span style={{color:C.white,fontSize:18,fontWeight:900}}>!</span></div>
+              <div><div style={{fontSize:14,fontWeight:700,color:C.danger,marginBottom:2}}>Model allocation is {fmtPct(model.tw)} — does not sum to 100%</div><div style={{fontSize:12.5,color:"#7a3a36"}}>Please enable additional strategies to complete the portfolio allocation.</div></div>
+            </div>)}
             <div style={{background:C.white,borderRadius:8,boxShadow:"0 1px 3px rgba(0,0,0,0.05)",border:`1px solid ${C.borderLight}`,overflow:"hidden"}}>
               <div style={{padding:"16px 22px 0"}}><SecLbl>Allocation Summary</SecLbl></div>
               <table style={{width:"100%",borderCollapse:"collapse",marginTop:10}}>
@@ -200,7 +222,7 @@ export default function App(){
           </div>
         </div>
       </div>
-      <div style={{textAlign:"center",padding:"20px 0 28px",color:C.textMuted,fontSize:11}}>Sandhill Investment Management · CorePlus Architect</div>
+      <div style={{textAlign:"center",padding:"20px 0 28px",color:C.textMuted,fontSize:11}}>Sandhill Investment Management · CorePlus Architect v4</div>
       </div>
     </div>
   );
