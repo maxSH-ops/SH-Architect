@@ -116,7 +116,7 @@ function getPasSplits(style,pct,customEq){
   return[{t:"IVV",l:"Passive Large Blend",c:"Large Cap Core",w:pct*0.6},{t:"IVW",l:"Passive Large Growth",c:"Large Cap Growth",w:pct*0.2},{t:"IJH",l:"Passive Mid Blend",c:"Mid Cap",w:pct*0.2}];
 }
 
-const CEA_MINS={Conservative:{2.5:2000000,3.75:1333333,5:1000000,7.5:666667,10:500000,15:333333},Moderate:{6.25:800000,7.5:666667,12.5:400000,15:333333,25:200000,30:166667},Aggressive:{8.75:571429,10:500000,17.5:285714,20:250000,35:142857},"Equity Only":{11.25:444444,12.5:400000,22.5:222222,25:200000,45:111111,50:100000}};
+//const CEA_MINS={Conservative:{2.5:2000000,3.75:1333333,5:1000000,7.5:666667,10:500000,15:333333},Moderate:{6.25:800000,7.5:666667,12.5:400000,15:333333,25:200000,30:166667},Aggressive:{8.75:571429,10:500000,17.5:285714,20:250000,35:142857},"Equity Only":{11.25:444444,12.5:400000,22.5:222222,25:200000,45:111111,50:100000}};
 const MIN_ACCT={Conservative:333333,Moderate:166667,Aggressive:142857,"Equity Only":100000};
 
 // Universal CEA validation — based purely on the $50K minimum sleeve size.
