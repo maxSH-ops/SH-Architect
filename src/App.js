@@ -134,7 +134,7 @@ function getMinAcct(style,customEq){
   return MIN_ACCT[style]||999999;
 }
 
-function isCEABad(style,pct,mv){const m=CEA_MINS[style];if(!m)return false;for(const[p,v]of Object.entries(m))if(Math.abs(pct-Number(p))<0.01&&mv<v)return true;return false;}
+//function isCEABad(style,pct,mv){const m=CEA_MINS[style];if(!m)return false;for(const[p,v]of Object.entries(m))if(Math.abs(pct-Number(p))<0.01&&mv<v)return true;return false;}
 
 // ═══ MODEL NAMING (90 non-EQ models, 30 EQ models) ═══════════════════════
 const MT=[];// non-Equity Only: 90 models (54 original + 36 new)
