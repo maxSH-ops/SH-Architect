@@ -2,7 +2,7 @@
   "name": "shcoreplus",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://maxSH-ops.github.io/SH-Architect/",
+  "homepage": "https://maxsh-ops.github.io/SH-Architect/",
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
